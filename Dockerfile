@@ -79,10 +79,11 @@ set -eu
 # HERMES_HOME ownership fixes remain upstream-controlled.
 /opt/hermes/docker/stage2-hook-upstream.sh "$@"
 
-# Railway mounts the persistent volume at /data. Make the whole volume owned by
-# the final (possibly UID/GID-remapped) Hermes user before starting the gateway.
+# Railway mounts the persistent volume at /data. Only repair the writable roots:
+# recursively walking a large persistent volume at every boot fills the cgroup's
+# dentry/inode slab cache and can make an idle gateway appear to use >1 GiB.
 mkdir -p /data/.hermes /data/workspace /data/workspaces
-chown -R hermes:hermes /data
+chown hermes:hermes /data /data/.hermes /data/workspace /data/workspaces
 EOF
 
 CMD ["/app/scripts/entrypoint.sh"]
