@@ -215,6 +215,14 @@ if [[ -z "${TELEGRAM_ALLOWED_USERS:-}${DISCORD_ALLOWED_USERS:-}${SLACK_ALLOWED_U
   fi
 fi
 
+# Existing pre-v23 databases duplicate message content in inline FTS tables and
+# trigram-index tool output. Migrate while no gateway writer is running; the
+# command is resumable and becomes a cheap no-op after the v23 marker is set.
+if [[ -f "${HERMES_HOME}/state.db" ]]; then
+  echo "[bootstrap] Optimizing Hermes session-index storage..."
+  hermes sessions optimize-storage --yes
+fi
+
 echo "[bootstrap] Starting Hermes gateway..."
 unset MESSAGING_CWD
 exec hermes gateway
