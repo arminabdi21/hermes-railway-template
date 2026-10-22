@@ -7,15 +7,15 @@ Deploy [Hermes Agent](https://github.com/NousResearch/hermes-agent) to Railway a
 ## Deploy
 
 1. Click **Deploy on Railway**.
-2. Configure an inference provider and at least one messaging platform in Railway Variables.
+2. Configure at least one messaging platform in Railway Variables. Its token is required; provider variables are optional.
 3. Add your user ID to the platform allowlist.
-4. Deploy, then send your bot a message.
+4. Deploy. If using Hermes OAuth, complete the provider login through Railway SSH, then send your bot a message.
 
 The template starts `hermes gateway`, stores Hermes state in `/data/.hermes`, and uses `/data/workspace` as the default terminal working directory.
 
 ## Environment variables
 
-The default setup uses OpenRouter and Telegram:
+The OpenRouter and Telegram setup is optional:
 
 ```env
 OPENROUTER_API_KEY=""
@@ -30,6 +30,8 @@ TELEGRAM_ALLOWED_USERS=123456789,987654321
 ```
 
 You can use other inference providers and messaging platforms supported by Hermes. See the [official Hermes repository](https://github.com/NousResearch/hermes-agent) for the current configuration options and environment variables; this template does not duplicate the upstream reference.
+
+OpenAI Codex subscribers can deploy with `TELEGRAM_BOT_TOKEN` (and their allowlist) but no provider API key. After deployment, use Railway SSH to run `hermes model` and select **ChatGPT** or **Codex Subscription (Hermes OAuth)**, then message the bot. Complete this login in the deployed persistent `HERMES_HOME` (`/data/.hermes` by default), not on your local machine.
 
 Template-specific variables:
 

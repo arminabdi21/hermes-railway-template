@@ -44,29 +44,6 @@ validate_platforms() {
   fi
 }
 
-has_valid_provider_config() {
-  if [[ -n "${OPENROUTER_API_KEY:-}" ]]; then return 0; fi
-  if [[ -n "${OPENAI_BASE_URL:-}" && -n "${OPENAI_API_KEY:-}" ]]; then return 0; fi
-  if [[ -n "${OPENAI_API_KEY:-}" ]]; then return 0; fi
-  if [[ -n "${ANTHROPIC_API_KEY:-}" || -n "${ANTHROPIC_TOKEN:-}" ]]; then return 0; fi
-  if [[ -n "${GOOGLE_API_KEY:-}" || -n "${GEMINI_API_KEY:-}" ]]; then return 0; fi
-  if [[ -n "${XAI_API_KEY:-}" ]]; then return 0; fi
-  if [[ -n "${DEEPSEEK_API_KEY:-}" ]]; then return 0; fi
-  if [[ -n "${DASHSCOPE_API_KEY:-}" ]]; then return 0; fi
-  if [[ -n "${KIMI_API_KEY:-}" ]]; then return 0; fi
-  if [[ -n "${KIMI_CODING_API_KEY:-}" || -n "${KIMI_CN_API_KEY:-}" ]]; then return 0; fi
-  if [[ -n "${GLM_API_KEY:-}" ]]; then return 0; fi
-  if [[ -n "${ZAI_API_KEY:-}" ]]; then return 0; fi
-  if [[ -n "${HF_TOKEN:-}" ]]; then return 0; fi
-  if [[ -n "${AI_GATEWAY_API_KEY:-}" ]]; then return 0; fi
-  if [[ -n "${MINIMAX_API_KEY:-}" || -n "${MINIMAX_CN_API_KEY:-}" ]]; then return 0; fi
-  if [[ -n "${KILOCODE_API_KEY:-}" ]]; then return 0; fi
-  if [[ -n "${OPENCODE_ZEN_API_KEY:-}" || -n "${OPENCODE_GO_API_KEY:-}" ]]; then return 0; fi
-  if [[ -n "${COPILOT_GITHUB_TOKEN:-}" ]]; then return 0; fi
-
-  return 1
-}
-
 append_if_set() {
   local key="$1"
   local val="${!key:-}"
@@ -175,11 +152,6 @@ configure_agent_cache_memory_limit() {
   echo "[bootstrap] Setting Hermes agent-cache anonymous-RSS budget to ${value} MB."
   hermes config set agent.agent_cache.memory_high_mb "$value"
 }
-
-if ! has_valid_provider_config; then
-  echo "[bootstrap] ERROR: Configure an inference provider supported by Hermes (for example OPENROUTER_API_KEY, OPENAI_API_KEY, ANTHROPIC_API_KEY, or GEMINI_API_KEY)." >&2
-  exit 1
-fi
 
 validate_platforms
 
