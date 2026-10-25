@@ -1,0 +1,9 @@
+{
+  "$schema": "https://schema.railpack.com",
+  "deploy": {
+    "base": {
+      "image": "nousresearch/hermes-agent:latest"
+    },
+    "startCommand": "gateway run"
+  }
+}
